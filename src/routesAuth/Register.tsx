@@ -3,18 +3,23 @@ import { useForm } from 'react-hook-form'
 import { AdministradorFormData, Admintrador } from '../zod/routesAuth'
 import { axiosPost } from '../helpers/peticiones/post'
 import { envs } from '../configs/envs'
+import { FormRegister } from './helpers/helpers'
 
 export const Register = () => {
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors }
   } = useForm<AdministradorFormData>({ resolver: zodResolver(Admintrador) })
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(envs.API_DESARROLLO)
     await axiosPost(`${envs.API_DESARROLLO}/authPanel/`, data)
+
+    FormRegister.forEach((value)=>{
+        setValue(value,'')
+    })
   })
 
 
