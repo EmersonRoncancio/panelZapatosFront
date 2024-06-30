@@ -5,11 +5,19 @@ import { axiosPost } from '../helpers/peticiones/post'
 import { envs } from '../configs/envs'
 import { FormRegister } from './helpers/helpers'
 import { useMutation } from '@tanstack/react-query'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { AlertError, AlertSucces } from '../alerts/alerts'
+import { ClipLoader } from 'react-spinners'
 
 export const Register = () => {
 
-  const {mutate, isPending, data: registerAdmins, isError} = useMutation({
-    mutationFn: axiosPost
+  const { mutate, isPending } = useMutation({
+    mutationFn: axiosPost,
+    onSuccess: (data) => {
+      if (data && data.error) return AlertError(data.error)
+      if (data) return AlertSucces('Se ha registrado con exito')
+    }
   })
 
   const {
@@ -19,15 +27,11 @@ export const Register = () => {
     formState: { errors }
   } = useForm<AdministradorFormData>({ resolver: zodResolver(Admintrador) })
 
-  
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = handleSubmit(async (data) => {
     mutate({
       url: `${envs.API_DESARROLLO}/authPanel`,
       data: data
     })
-
-    console.log(registerAdmins)
-    console.log(isError)
 
     FormRegister.forEach((value) => {
       setValue(value, '')
@@ -145,15 +149,20 @@ export const Register = () => {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full h-9 justify-center items-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 {
-                  isPending? 'Cargando': 'Registrar'
+                  isPending ? <ClipLoader
+                    color="#ffffff"
+                    size={20}
+                  /> : <span>Registrar</span>
                 }
               </button>
             </div>
           </form>
         </div>
+        <ToastContainer
+          position="top-center" />
       </div>
     </>
   )
