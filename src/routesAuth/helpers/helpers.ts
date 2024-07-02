@@ -15,3 +15,14 @@ export const FormRegister: TypeFormRegister = [
 ]
 
 
+type TypeLoginAdmin = [
+    'usuario',
+    'contraseña'
+]
+
+export const FormLoginAdmin: TypeLoginAdmin = [
+    'usuario',
+    'contraseña'
+]
+
+

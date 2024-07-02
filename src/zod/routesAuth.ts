@@ -15,3 +15,17 @@ export const Admintrador = z.object({
 })
 
 export type AdministradorFormData = z.infer<typeof Admintrador>;
+
+
+export const LoginAdministrador = z.object({
+    usuario: z.string().min(1, { message: 'El usuario es requerido' }),
+    contraseña: z.string().min(1, {
+        message: 'La contraseña es requerida'
+    }).min(8, {
+        message: 'Debe ser mayor a 8 digitos'
+    }).max(20, {
+        message: 'Debe ser menor a 20 digitos'
+    })
+})
+
+export type LoginAdministradortype = z.infer<typeof LoginAdministrador>

@@ -1,6 +1,55 @@
 import { Link } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { LoginAdministrador, LoginAdministradortype } from '../zod/routesAuth'
+import { useMutation } from '@tanstack/react-query'
+import { axiosPost } from '../helpers/peticiones/post'
+import { envs } from '../configs/envs'
+import { FormLoginAdmin } from './helpers/helpers'
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react'
 
 export const Login = () => {
+
+    const [isauthenticated, setIsauthenticated] = useState(false)
+    const navigate = useNavigate()
+    const cookie = Cookies.get('login')
+
+    const { mutate } = useMutation({
+        mutationFn: axiosPost,
+        onSuccess: (data) => {
+            const HorasEnMilisegundos = 10800000;
+            const Hora = new Date(Date.now() + HorasEnMilisegundos);
+            if(data.error) return
+            Cookies.set('login', data.token, { expires: Hora })
+            setIsauthenticated(true)
+        }
+    })
+
+    const { register,
+        handleSubmit,
+        setValue
+    } = useForm<LoginAdministradortype>({ resolver: zodResolver(LoginAdministrador) })
+
+    const onSubmit = handleSubmit((data) => {
+        mutate({
+            url: `${envs.API_DESARROLLO}/authPanel/login`,
+            data: data
+        })
+
+        FormLoginAdmin.forEach((value) => {
+            setValue(value, '')
+        })
+    })
+
+    useEffect(() => {
+        if (cookie  && isauthenticated) {
+            navigate('/forgotPassword')
+        }
+    }, [cookie, isauthenticated, navigate])
+
+
     return (
         <>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -16,18 +65,17 @@ export const Login = () => {
                 </div>
 
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <form className="space-y-6" action="#" method="POST">
+                    <form
+                        onSubmit={onSubmit}
+                        className="space-y-6">
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                                 Usuario
                             </label>
                             <div className="mt-2">
                                 <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    required
+                                    {...register('usuario')}
+                                    type='text'
                                     className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2"
                                 />
                             </div>
@@ -46,11 +94,8 @@ export const Login = () => {
                             </div>
                             <div className="mt-2">
                                 <input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    autoComplete="current-password"
-                                    required
+                                    {...register('contraseña')}
+                                    type='password'
                                     className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2"
                                 />
                             </div>
