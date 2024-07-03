@@ -29,7 +29,7 @@ export const Register = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     mutate({
-      url: `${envs.API_DESARROLLO}/authPanel`,
+      url: `${envs.API}/authPanel`,
       data: data
     })
 

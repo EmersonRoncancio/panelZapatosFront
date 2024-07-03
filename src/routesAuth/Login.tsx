@@ -8,33 +8,49 @@ import { envs } from '../configs/envs'
 import { FormLoginAdmin } from './helpers/helpers'
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useAunthenticated } from '../context/authenticated'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { AlertError } from '../alerts/alerts'
+import { ClipLoader } from 'react-spinners'
 
 export const Login = () => {
 
-    const [isauthenticated, setIsauthenticated] = useState(false)
+    const { aunthenticated, setAunthenticated } = useAunthenticated()
     const navigate = useNavigate()
     const cookie = Cookies.get('login')
 
-    const { mutate } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: axiosPost,
         onSuccess: (data) => {
             const HorasEnMilisegundos = 10800000;
             const Hora = new Date(Date.now() + HorasEnMilisegundos);
-            if(data.error) return
+            if (data.error) {
+                AlertError(data.error)
+                return
+            }
             Cookies.set('login', data.token, { expires: Hora })
-            setIsauthenticated(true)
+
+            axiosPost({
+                url: `${envs.API}/authPanel/validateToken`,
+                data: { token: data.token }
+            }).then(validate => {
+                if (validate.error) return
+                setAunthenticated()
+            })
         }
     })
 
     const { register,
         handleSubmit,
-        setValue
+        setValue,
+        formState: { errors }
     } = useForm<LoginAdministradortype>({ resolver: zodResolver(LoginAdministrador) })
 
     const onSubmit = handleSubmit((data) => {
         mutate({
-            url: `${envs.API_DESARROLLO}/authPanel/login`,
+            url: `${envs.API}/authPanel/login`,
             data: data
         })
 
@@ -44,10 +60,10 @@ export const Login = () => {
     })
 
     useEffect(() => {
-        if (cookie  && isauthenticated) {
+        if (cookie && aunthenticated) {
             navigate('/forgotPassword')
         }
-    }, [cookie, isauthenticated, navigate])
+    }, [cookie, aunthenticated, navigate])
 
 
     return (
@@ -79,6 +95,9 @@ export const Login = () => {
                                     className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2"
                                 />
                             </div>
+                            {
+                                errors.usuario && <span className='text-red-600'>{errors.usuario.message}</span>
+                            }
                         </div>
 
                         <div>
@@ -98,15 +117,23 @@ export const Login = () => {
                                     type='password'
                                     className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2"
                                 />
+                                {
+                                    errors.contraseña && <span className='text-red-600'>{errors.contraseña.message}</span>
+                                }
                             </div>
                         </div>
 
                         <div>
                             <button
                                 type="submit"
-                                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                className="flex w-full h-9 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                             >
-                                Iniciar sesión
+                                {
+                                    isPending ? <ClipLoader
+                                        color="#ffffff"
+                                        size={20}
+                                    /> : <span>Iniciar sesión</span>
+                                }
                             </button>
                         </div>
                     </form>
@@ -118,6 +145,8 @@ export const Login = () => {
                         </Link>
                     </p>
                 </div>
+                <ToastContainer
+                    position='top-center' />
             </div>
         </>
     )

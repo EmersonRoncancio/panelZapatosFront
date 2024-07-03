@@ -1,6 +1,9 @@
+import { Link } from "react-router-dom"
 
 export const ForgotPassword = () => {
   return (
-    <div>ForgotPassword</div>
+    <div>
+      <Link to='/prueba'>Ir a prueba</Link>
+    </div>
   )
 }
