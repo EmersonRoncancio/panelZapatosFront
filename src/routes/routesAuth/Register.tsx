@@ -1,13 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { AdministradorFormData, Admintrador } from '../zod/routesAuth'
-import { axiosPost } from '../helpers/peticiones/post'
-import { envs } from '../configs/envs'
+import { AdministradorFormData, Admintrador } from '../../zod/routesAuth'
+import { axiosPost } from '../../helpers/peticiones/post'
+import { envs } from '../../configs/envs'
 import { FormRegister } from './helpers/helpers'
 import { useMutation } from '@tanstack/react-query'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AlertError, AlertSucces } from '../alerts/alerts'
+import { AlertError, AlertSucces } from '../../alerts/alerts'
 import { ClipLoader } from 'react-spinners'
 
 export const Register = () => {

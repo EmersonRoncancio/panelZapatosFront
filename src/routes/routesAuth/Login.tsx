@@ -1,18 +1,18 @@
 import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { LoginAdministrador, LoginAdministradortype } from '../zod/routesAuth'
+import { LoginAdministrador, LoginAdministradortype } from '../../zod/routesAuth'
 import { useMutation } from '@tanstack/react-query'
-import { axiosPost } from '../helpers/peticiones/post'
-import { envs } from '../configs/envs'
+import { axiosPost } from '../../helpers/peticiones/post'
+import { envs } from '../../configs/envs'
 import { FormLoginAdmin } from './helpers/helpers'
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react'
-import { useAunthenticated } from '../context/authenticated'
+import { useAunthenticated } from '../../context/authenticated'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { AlertError } from '../alerts/alerts'
+import { AlertError } from '../../alerts/alerts'
 import { ClipLoader } from 'react-spinners'
 
 export const Login = () => {
@@ -61,7 +61,7 @@ export const Login = () => {
 
     useEffect(() => {
         if (cookie && aunthenticated) {
-            navigate('/forgotPassword')
+            navigate('/home')
         }
     }, [cookie, aunthenticated, navigate])
 
@@ -106,9 +106,9 @@ export const Login = () => {
                                     Contraseña
                                 </label>
                                 <div className="text-sm">
-                                    <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+                                    <Link to='/forgotPassword' className="font-semibold text-indigo-600 hover:text-indigo-500">
                                         Olvidaste tu contraseña?
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                             <div className="mt-2">
