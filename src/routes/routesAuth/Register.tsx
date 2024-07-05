@@ -130,7 +130,7 @@ export const Register = () => {
 
             <div>
               <div className="flex items-center justify-between">
-                <label htmlFor="contraseña" className="block text-sm font-medium leading-6 text-gray-900">
+                <label htmlFor="claveAdministrativa" className="block text-sm font-medium leading-6 text-gray-900">
                   Clave Administrativa
                 </label>
               </div>

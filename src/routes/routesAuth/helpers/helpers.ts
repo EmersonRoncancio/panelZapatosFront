@@ -26,3 +26,17 @@ export const FormLoginAdmin: TypeLoginAdmin = [
 ]
 
 
+type TypeForgotPassword = [
+    'usuario',
+    'nuevaContraseña',
+    'claveAdministrativa'
+]
+
+export const FormForgotPassword: TypeForgotPassword = [
+    'usuario',
+    'nuevaContraseña',
+    'claveAdministrativa'
+]
+
+
+

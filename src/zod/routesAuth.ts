@@ -29,3 +29,17 @@ export const LoginAdministrador = z.object({
 })
 
 export type LoginAdministradortype = z.infer<typeof LoginAdministrador>
+
+export const ForgotPasswordAdmin = z.object({
+    usuario: z.string().min(1, { message: 'El usuario es requerido' }),
+    nuevaContraseña: z.string().min(1, {
+        message: 'La contraseña es requerida'
+    }).min(8, {
+        message: 'Debe ser mayor a 8 digitos'
+    }).max(20, {
+        message: 'Debe ser menor a 20 digitos'
+    }),
+    claveAdministrativa: z.string().min(1, { message: 'La clave administrativa es requerida' })
+})
+
+export type ForgotPasswordType = z.infer<typeof ForgotPasswordAdmin>
