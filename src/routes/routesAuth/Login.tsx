@@ -13,7 +13,6 @@ import { useAunthenticated } from '../../context/authenticated'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { AlertError } from '../../alerts/alerts'
-import { ClipLoader } from 'react-spinners'
 
 export const Login = () => {
 
@@ -75,7 +74,7 @@ export const Login = () => {
                         src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                         alt="Your Company"
                     />
-                    <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                    <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight">
                         Iniciar sesión en Zapatopia
                     </h2>
                 </div>
@@ -85,14 +84,14 @@ export const Login = () => {
                         onSubmit={onSubmit}
                         className="space-y-6">
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                            <label htmlFor="email" className="block text-sm font-medium leading-6">
                                 Usuario
                             </label>
                             <div className="mt-2">
                                 <input
-                                    {...register('usuario')}
                                     type='text'
-                                    className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2"
+                                    {...register('usuario')}
+                                    className="block input input-bordered w-full"
                                 />
                             </div>
                             {
@@ -102,7 +101,7 @@ export const Login = () => {
 
                         <div>
                             <div className="flex items-center justify-between">
-                                <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                                <label htmlFor="password" className="block text-sm font-medium leading-6">
                                     Contraseña
                                 </label>
                                 <div className="text-sm">
@@ -115,7 +114,7 @@ export const Login = () => {
                                 <input
                                     {...register('contraseña')}
                                     type='password'
-                                    className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2"
+                                    className="input input-bordered w-full"
                                 />
                                 {
                                     errors.contraseña && <span className='text-red-600'>{errors.contraseña.message}</span>
@@ -126,13 +125,12 @@ export const Login = () => {
                         <div>
                             <button
                                 type="submit"
-                                className="flex w-full h-9 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                className="flex w-full h-9 justify-center items-center btn btn-primary"
                             >
                                 {
-                                    isPending ? <ClipLoader
-                                        color="#ffffff"
-                                        size={20}
-                                    /> : <span>Iniciar sesión</span>
+                                    isPending ?
+                                        <span className="loading loading-dots loading-md"></span>
+                                        : <span>Iniciar sesión</span>
                                 }
                             </button>
                         </div>

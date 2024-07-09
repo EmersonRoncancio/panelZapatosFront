@@ -5,7 +5,6 @@ import { useMutation } from '@tanstack/react-query'
 import { axiosPath } from '../../helpers/peticiones/path'
 import { envs } from '../../configs/envs'
 import { FormForgotPassword } from './helpers/helpers'
-import { ClipLoader } from 'react-spinners'
 import { ToastContainer } from 'react-toastify'
 import { AlertError, AlertSucces } from '../../alerts/alerts'
 
@@ -14,9 +13,9 @@ export const ForgotPassword = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: axiosPath,
     onSuccess: (data) => {
-      if(data.error) return AlertError(data.error)
+      if (data.error) return AlertError(data.error)
 
-      if(data) return AlertSucces('Se ha cambiado la contraseña')
+      if (data) return AlertSucces('Se ha cambiado la contraseña')
     }
   })
 
@@ -65,7 +64,7 @@ export const ForgotPassword = () => {
               <input
                 type="text"
                 {...register('usuario')}
-                className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2"
+                className="input input-bordered w-full"
               />
             </div>
             {
@@ -83,7 +82,7 @@ export const ForgotPassword = () => {
               <input
                 type="password"
                 {...register('nuevaContraseña')}
-                className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2"
+                className="input input-bordered w-full"
               />
             </div>
             {
@@ -101,7 +100,7 @@ export const ForgotPassword = () => {
               <input
                 type="password"
                 {...register('claveAdministrativa')}
-                className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 p-2"
+                className="input input-bordered w-full"
               />
             </div>
             {
@@ -112,13 +111,12 @@ export const ForgotPassword = () => {
           <div>
             <button
               type="submit"
-              className="flex w-full h-9 justify-center items-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="flex w-full h-9 justify-center items-center btn btn-primary"
             >
               {
-                isPending ? <ClipLoader
-                  color="#ffffff"
-                  size={20}
-                /> : <span>Cambiar</span>
+                isPending ?
+                  <span className="loading loading-dots loading-md"></span>
+                  : <span>Cambiar</span>
               }
             </button>
           </div>

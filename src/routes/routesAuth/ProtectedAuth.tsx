@@ -4,7 +4,6 @@ import { useAunthenticated } from '../../context/authenticated'
 import { axiosPost } from '../../helpers/peticiones/post'
 import { envs } from '../../configs/envs'
 import { useEffect, useState } from 'react'
-import { ClipLoader } from 'react-spinners'
 
 export const ProtectedAuth = () => {
 
@@ -35,7 +34,7 @@ export const ProtectedAuth = () => {
     return (
         loading ?
             <div className='h-screen w-full flex items-center justify-center'>
-                <ClipLoader size={35} />
+                <span className="loading loading-dots loading-lg"></span>
             </div> :
             <Outlet />
     )
