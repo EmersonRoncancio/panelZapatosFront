@@ -13,7 +13,7 @@ export default function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/forgotPassword" element={<ForgotPassword />} />
       <Route element={<ProtectedAuth />}>
-        <Route path="/home" element={<Home />} />
+        <Route path="/home/*" element={<Home />} />
       </Route>
     </Routes>
   )

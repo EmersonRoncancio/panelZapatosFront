@@ -1,19 +1,25 @@
+import { Link, Route, Routes } from "react-router-dom"
+import { Agregar } from "./Agregar"
+import { Inicio } from "./Inicio"
 
 export const Home = () => {
   return (
-    <div className="card bg-base-100 w-96 shadow-xl">
-      <figure>
-        <img
-          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
-          alt="Shoes" />
-      </figure>
-      <div className="card-body">
-        <h2 className="card-title">Shoes!</h2>
-        <p>If a dog chews shoes whose shoes does he choose?</p>
-        <div className="card-actions justify-end">
-          <button className="btn btn-primary">Buy Now</button>
+    <div className="flex w-full">
+      <aside className="w-[20%] bg-[#4c9da1] h-screen sticky flex justify-center py-4">
+        <div className="flex flex-col items-center gap-2">
+          <h2 className="text-white font-semibold text-lg">ZAPATOIDE</h2>
+          <ul className="flex flex-col justify-start items-center gap-7">
+            <li className="btn btn-wide btn-primary"><Link to='/home/inicio'>Inicio</Link></li>
+            <li className="btn btn-wide btn-primary"><Link to='/home/agregar'>Agregar</Link></li>
+          </ul>
         </div>
-      </div>
+      </aside>
+      <main className="w-[80%] h-screen overflow-auto">
+        <Routes>
+          <Route path="/inicio" element={<Inicio/>}/>
+          <Route path="/agregar" element={<Agregar/>}/>
+        </Routes>
+      </main>
     </div>
   )
 }
