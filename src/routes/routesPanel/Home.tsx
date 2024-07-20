@@ -9,14 +9,14 @@ export const Home = () => {
         <div className="flex flex-col items-center gap-2">
           <h2 className="text-white font-semibold text-lg">ZAPATOIDE</h2>
           <ul className="flex flex-col justify-start items-center gap-7">
-            <li className="btn btn-wide btn-primary"><Link to='/home/inicio'>Inicio</Link></li>
-            <li className="btn btn-wide btn-primary"><Link to='/home/agregar'>Agregar</Link></li>
+            <li><Link to='/home/' className="btn btn-wide btn-primary">Inicio</Link></li>
+            <li><Link to='/home/agregar' className="btn btn-wide btn-primary">Agregar</Link></li>
           </ul>
         </div>
       </aside>
       <main className="w-[80%] h-screen overflow-auto">
         <Routes>
-          <Route path="/inicio" element={<Inicio/>}/>
+          <Route path="/" element={<Inicio/>} index/>
           <Route path="/agregar" element={<Agregar/>}/>
         </Routes>
       </main>
