@@ -1,5 +1,66 @@
+import { useMutation } from "@tanstack/react-query"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { axiosPostBearer } from "../../helpers/BearerToken/post"
+import { envs } from "../../configs/envs"
+import Cookies from 'js-cookie'
 
 export const Agregar = () => {
+
+    const [files, setFiles] = useState<string[]>()
+
+    const { isPending, mutate } = useMutation({
+        mutationFn: axiosPostBearer,
+        onSuccess: (data) => {
+            console.log(data)
+            console.log(data.error)
+        }
+    })
+
+    const {
+        register,
+        setValue,
+        handleSubmit
+    } = useForm()
+
+    const onSubmit = handleSubmit((value) => {
+        const { images, ...formValue } = value
+
+        const formData = new FormData();
+        const arrImages = Array.from(images)
+
+        //se agrega los datos a la constante de tipo formData, para manejera envio multiple de imagenes
+        arrImages.forEach((file) => {
+            console.log(typeof file)
+            formData.append('image', file as File);
+        });
+
+        //se agregan los demas datos del formulario
+        Object.keys(formValue).forEach((key) => {
+            formData.append(key, formValue[key]);
+        });
+
+        mutate({
+            url: `${envs.API}/zapatos/`,
+            data: formData,
+            token: Cookies.get('login') || ''
+        })
+    })
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files) {
+            const arrFiles = Array.from(event.target.files)
+
+            const urlsImgs = arrFiles.map(img => {
+                return URL.createObjectURL(img)
+            })
+            setFiles(urlsImgs)
+
+            const form = new FormData()
+            console.log(form)
+        }
+    }
+
     return (
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -15,6 +76,7 @@ export const Agregar = () => {
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                 <form
+                    onSubmit={onSubmit}
                     className="space-y-6">
                     <div>
                         <div className="flex items-center justify-between">
@@ -26,61 +88,110 @@ export const Agregar = () => {
                             <input
                                 type="text"
                                 className="input input-bordered w-full"
+                                {...register('nombre')}
                             />
                         </div>
                     </div>
 
                     <div>
                         <div className="flex items-center justify-between">
-                            <label htmlFor="apellido" className="block text-sm font-medium leading-6 text-gray-900">
-                                Apellido
+                            <label htmlFor="marca" className="block text-sm font-medium leading-6 text-gray-900">
+                                Marca
                             </label>
                         </div>
                         <div className="mt-2">
                             <input
                                 type="text"
                                 className="input input-bordered w-full"
+                                {...register('marca')}
                             />
                         </div>
                     </div>
 
                     <div>
                         <div className="flex items-center justify-between">
-                            <label htmlFor="usuario" className="block text-sm font-medium leading-6 text-gray-900">
-                                Usuario
+                            <label htmlFor="talla" className="block text-sm font-medium leading-6 text-gray-900">
+                                Talla
                             </label>
                         </div>
                         <div className="mt-2">
                             <input
                                 type="text"
                                 className="input input-bordered w-full"
+                                {...register('talla')}
                             />
                         </div>
                     </div>
 
                     <div>
                         <div className="flex items-center justify-between">
-                            <label htmlFor="contraseña" className="block text-sm font-medium leading-6 text-gray-900">
-                                Contraseña
+                            <label htmlFor="color" className="block text-sm font-medium leading-6 text-gray-900">
+                                Color
                             </label>
                         </div>
                         <div className="mt-2">
                             <input
-                                type="password"
+                                type="text"
                                 className="input input-bordered w-full"
+                                {...register('color')}
                             />
                         </div>
                     </div>
 
                     <div>
                         <div className="flex items-center justify-between">
-                            <label htmlFor="claveAdministrativa" className="block text-sm font-medium leading-6 text-gray-900">
-                                Clave Administrativa
+                            <label htmlFor="precio" className="block text-sm font-medium leading-6 text-gray-900">
+                                Precio
                             </label>
                         </div>
                         <div className="mt-2">
+                            <input
+                                type="text"
+                                className="input input-bordered w-full"
+                                {...register('precio')}
+                            />
                         </div>
                     </div>
+
+                    <div>
+                        <div className="flex items-center justify-between">
+                            <label htmlFor="stock" className="block text-sm font-medium leading-6 text-gray-900">
+                                Stock
+                            </label>
+                        </div>
+                        <div className="mt-2">
+                            <input
+                                type="text"
+                                className="input input-bordered w-full"
+                                {...register('stock')}
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <div className="flex items-center justify-between">
+                            <label htmlFor="images" className="block text-sm font-medium leading-6 text-gray-900">
+                                Imagenes
+                            </label>
+                        </div>
+                        <div className="mt-2">
+                            <input
+                                type="file"
+                                multiple
+                                accept='image/*'
+                                className="file-input file-input-bordered file-input-primary w-full"
+                                {...register('images')}
+                                onChange={handleChange} />
+                        </div>
+                    </div>
+
+                    {
+                        files?.map((image) => {
+                            return (
+                                <img className="card" src={image} alt="" />
+                            )
+                        })
+                    }
 
                     <div>
                         <button
