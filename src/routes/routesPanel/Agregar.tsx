@@ -4,6 +4,11 @@ import { useForm } from "react-hook-form"
 import { axiosPostBearer } from "../../helpers/BearerToken/post"
 import { envs } from "../../configs/envs"
 import Cookies from 'js-cookie'
+import { ToastContainer } from "react-toastify"
+import { AlertError, AlertSucces } from "../../alerts/alerts"
+import { CreateZapato } from "./helpers/helpers"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { CreateZapatos, CreateZapatoType } from "../../zod/routesAuth"
 
 export const Agregar = () => {
 
@@ -12,16 +17,17 @@ export const Agregar = () => {
     const { isPending, mutate } = useMutation({
         mutationFn: axiosPostBearer,
         onSuccess: (data) => {
-            console.log(data)
-            console.log(data.error)
+            if (data.error) return AlertError(data.error)
+            if (data) return AlertSucces('Creacion Exitosa')
         }
     })
 
     const {
         register,
         setValue,
-        handleSubmit
-    } = useForm()
+        handleSubmit,
+        formState: { errors }
+    } = useForm<CreateZapatoType>({ resolver: zodResolver(CreateZapatos) })
 
     const onSubmit = handleSubmit((value) => {
         const { images, ...formValue } = value
@@ -31,13 +37,11 @@ export const Agregar = () => {
 
         //se agrega los datos a la constante de tipo formData, para manejera envio multiple de imagenes
         arrImages.forEach((file) => {
-            console.log(typeof file)
             formData.append('image', file as File);
         });
 
-        //se agregan los demas datos del formulario
-        Object.keys(formValue).forEach((key) => {
-            formData.append(key, formValue[key]);
+        Object.entries(formValue).forEach(([key, value]) => {
+            formData.append(key, value.toString());
         });
 
         mutate({
@@ -45,6 +49,11 @@ export const Agregar = () => {
             data: formData,
             token: Cookies.get('login') || ''
         })
+
+        CreateZapato.forEach((value) => {
+            setValue(value, '')
+        })
+        setFiles([])
     })
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,9 +64,6 @@ export const Agregar = () => {
                 return URL.createObjectURL(img)
             })
             setFiles(urlsImgs)
-
-            const form = new FormData()
-            console.log(form)
         }
     }
 
@@ -91,6 +97,9 @@ export const Agregar = () => {
                                 {...register('nombre')}
                             />
                         </div>
+                        {
+                            errors.nombre && <span className='text-red-600'>{errors.nombre.message}</span>
+                        }
                     </div>
 
                     <div>
@@ -106,6 +115,9 @@ export const Agregar = () => {
                                 {...register('marca')}
                             />
                         </div>
+                        {
+                            errors.marca && <span className='text-red-600'>{errors.marca.message}</span>
+                        }
                     </div>
 
                     <div>
@@ -121,6 +133,9 @@ export const Agregar = () => {
                                 {...register('talla')}
                             />
                         </div>
+                        {
+                            errors.talla && <span className='text-red-600'>{errors.talla.message}</span>
+                        }
                     </div>
 
                     <div>
@@ -136,6 +151,9 @@ export const Agregar = () => {
                                 {...register('color')}
                             />
                         </div>
+                        {
+                            errors.color && <span className='text-red-600'>{errors.color.message}</span>
+                        }
                     </div>
 
                     <div>
@@ -151,6 +169,9 @@ export const Agregar = () => {
                                 {...register('precio')}
                             />
                         </div>
+                        {
+                            errors.precio && <span className='text-red-600'>{errors.precio.message}</span>
+                        }
                     </div>
 
                     <div>
@@ -166,6 +187,9 @@ export const Agregar = () => {
                                 {...register('stock')}
                             />
                         </div>
+                        {
+                            errors.stock && <span className='text-red-600'>{errors.stock.message}</span>
+                        }
                     </div>
 
                     <div>
@@ -198,18 +222,17 @@ export const Agregar = () => {
                             type="submit"
                             className="flex w-full h-9 justify-center items-center btn btn-primary"
                         >
-                            {/* {
-                  isPending ?
-                    <span className="loading loading-dots loading-md"></span>
-                    : <span>Registrar</span>
-                } */}
-                            Guardar
+                            {
+                                isPending ?
+                                    <span className="loading loading-dots loading-md"></span>
+                                    : <span>Guardar</span>
+                            }
                         </button>
                     </div>
                 </form>
             </div>
-            {/* <ToastContainer
-          position="top-center" /> */}
+            <ToastContainer
+                position="top-center" />
         </div>
     )
 }

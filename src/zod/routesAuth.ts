@@ -43,3 +43,22 @@ export const ForgotPasswordAdmin = z.object({
 })
 
 export type ForgotPasswordType = z.infer<typeof ForgotPasswordAdmin>
+
+
+// const fileSchema = z.instanceof(File).refine((file) => {
+//     return file.type === 'image/jpeg' || file.type === 'image/png';
+//   }, {
+//     message: 'Solo se permiten archivos JPEG y PNG'
+//   });
+
+export const CreateZapatos = z.object({
+    nombre: z.string().min(1, {message: 'El nombre es requerido'}),
+    marca: z.string().min(1, {message: 'La marca es requerida'}),
+    talla: z.string().min(1, {message: 'La talla es requerida'}),
+    color: z.string().min(1, {message: 'El color es requerido'}),
+    precio: z.string().min(1, {message: 'El precio requerido'}),
+    stock: z.string().min(1, {message: 'El stock es requerido'}),
+    images: z.any()
+})
+
+export type CreateZapatoType = z.infer<typeof CreateZapatos>
