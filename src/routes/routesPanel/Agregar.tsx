@@ -12,7 +12,8 @@ import { CreateZapatos, CreateZapatoType } from "../../zod/routesAuth"
 
 export const Agregar = () => {
 
-    const [files, setFiles] = useState<string[]>()
+    const [files, setFiles] = useState<string[]>([])
+    const [fileIMage, SetFIleIMage] = useState<FileList[]>([])
 
     const { isPending, mutate } = useMutation({
         mutationFn: axiosPostBearer,
@@ -30,14 +31,15 @@ export const Agregar = () => {
     } = useForm<CreateZapatoType>({ resolver: zodResolver(CreateZapatos) })
 
     const onSubmit = handleSubmit((value) => {
+        console.log(fileIMage)
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { images, ...formValue } = value
 
         const formData = new FormData();
-        const arrImages = Array.from(images)
-
         //se agrega los datos a la constante de tipo formData, para manejera envio multiple de imagenes
-        arrImages.forEach((file) => {
-            formData.append('image', file as File);
+        fileIMage.forEach((file) => {
+            formData.append('image', file[0]);
         });
 
         Object.entries(formValue).forEach(([key, value]) => {
@@ -54,16 +56,19 @@ export const Agregar = () => {
             setValue(value, '')
         })
         setFiles([])
+        SetFIleIMage([])
     })
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const arrFiles = Array.from(event.target.files)
+            const arrPrueba: FileList[] = []
 
-            const urlsImgs = arrFiles.map(img => {
-                return URL.createObjectURL(img)
-            })
-            setFiles(urlsImgs)
+            arrPrueba.push(event.target.files)
+            SetFIleIMage((preveImages) => [...preveImages, ...arrPrueba])
+
+            const urlsImgs = arrFiles.map(img => URL.createObjectURL(img))
+            setFiles((prevUrls) => [...prevUrls, ...urlsImgs])
         }
     }
 
@@ -209,13 +214,19 @@ export const Agregar = () => {
                         </div>
                     </div>
 
-                    {
-                        files?.map((image) => {
-                            return (
-                                <img className="card" src={image} alt="" />
-                            )
-                        })
-                    }
+                    <div className="grid grid-cols-3 justify-center items-center justify-items-center content-center gap-1">
+                        {
+                            files?.map((image, index) => {
+                                return (
+                                    <div key={index} className="card w-28 h-24 overflow-hidden">
+                                        <img className="w-full h-full object-cover" src={image} alt="" />
+                                    </div>
+
+                                )
+                            })
+                        }
+                    </div>
+
 
                     <div>
                         <button
