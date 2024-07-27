@@ -13,7 +13,7 @@ import { CreateZapatos, CreateZapatoType } from "../../zod/routesAuth"
 export const Agregar = () => {
 
     const [files, setFiles] = useState<string[]>([])
-    const [fileIMage, SetFIleIMage] = useState<FileList[]>([])
+    const [fileIMage, SetFIleIMage] = useState<File[]>([])
 
     const { isPending, mutate } = useMutation({
         mutationFn: axiosPostBearer,
@@ -31,15 +31,13 @@ export const Agregar = () => {
     } = useForm<CreateZapatoType>({ resolver: zodResolver(CreateZapatos) })
 
     const onSubmit = handleSubmit((value) => {
-        console.log(fileIMage)
-
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { images, ...formValue } = value
 
         const formData = new FormData();
         //se agrega los datos a la constante de tipo formData, para manejera envio multiple de imagenes
         fileIMage.forEach((file) => {
-            formData.append('image', file[0]);
+            formData.append('image', file);
         });
 
         Object.entries(formValue).forEach(([key, value]) => {
@@ -62,10 +60,8 @@ export const Agregar = () => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
             const arrFiles = Array.from(event.target.files)
-            const arrPrueba: FileList[] = []
 
-            arrPrueba.push(event.target.files)
-            SetFIleIMage((preveImages) => [...preveImages, ...arrPrueba])
+            SetFIleIMage((preveImages) => [...preveImages, ...arrFiles])
 
             const urlsImgs = arrFiles.map(img => URL.createObjectURL(img))
             setFiles((prevUrls) => [...prevUrls, ...urlsImgs])
