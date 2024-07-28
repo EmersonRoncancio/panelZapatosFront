@@ -30,6 +30,7 @@ export const LoginAdministrador = z.object({
 
 export type LoginAdministradortype = z.infer<typeof LoginAdministrador>
 
+
 export const ForgotPasswordAdmin = z.object({
     usuario: z.string().min(1, { message: 'El usuario es requerido' }),
     nuevaContraseña: z.string().min(1, {
@@ -44,12 +45,6 @@ export const ForgotPasswordAdmin = z.object({
 
 export type ForgotPasswordType = z.infer<typeof ForgotPasswordAdmin>
 
-
-// const fileSchema = z.instanceof(File).refine((file) => {
-//     return file.type === 'image/jpeg' || file.type === 'image/png';
-//   }, {
-//     message: 'Solo se permiten archivos JPEG y PNG'
-//   });
 
 export const CreateZapatos = z.object({
     nombre: z.string().min(1, {message: 'El nombre es requerido'}),

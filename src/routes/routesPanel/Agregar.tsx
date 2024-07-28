@@ -1,12 +1,12 @@
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
-import { useForm } from "react-hook-form"
+import { FieldErrors, useForm } from "react-hook-form"
 import { axiosPostBearer } from "../../helpers/BearerToken/post"
 import { envs } from "../../configs/envs"
 import Cookies from 'js-cookie'
 import { ToastContainer } from "react-toastify"
 import { AlertError, AlertSucces } from "../../alerts/alerts"
-import { CreateZapato } from "./helpers/helpers"
+import { CreateZapato, formCreateZapato } from "./helpers/helpers"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CreateZapatos, CreateZapatoType } from "../../zod/routesAuth"
 import { MdDelete } from "react-icons/md";
@@ -70,15 +70,23 @@ export const Agregar = () => {
         }
     }
 
-    const handleDeleteIMage = (indice:number) =>{
+    const handleDeleteIMage = (indice: number) => {
         const deleteImage = fileIMage
-        deleteImage.splice(indice,1)
+        deleteImage.splice(indice, 1)
         SetFIleIMage(deleteImage)
 
         const urlsImgs = deleteImage.map(img => URL.createObjectURL(img))
         setFiles(urlsImgs)
     }
-    
+
+    const renderError = (fieldName: keyof CreateZapatoType, errors: FieldErrors<CreateZapatoType>) => {
+        const error = errors[fieldName];
+        if (error && typeof error.message === 'string') {
+            return <span className='text-red-600'>{error.message}</span>;
+        }
+        return null;
+    };
+
     return (
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -96,113 +104,29 @@ export const Agregar = () => {
                 <form
                     onSubmit={onSubmit}
                     className="space-y-6">
-                    <div>
-                        <div className="flex items-center justify-between">
-                            <label htmlFor="nombre" className="block text-sm font-medium leading-6 text-gray-900">
-                                Nombre
-                            </label>
-                        </div>
-                        <div className="mt-2">
-                            <input
-                                type="text"
-                                className="input input-bordered w-full"
-                                {...register('nombre')}
-                            />
-                        </div>
-                        {
-                            errors.nombre && <span className='text-red-600'>{errors.nombre.message}</span>
-                        }
-                    </div>
-
-                    <div>
-                        <div className="flex items-center justify-between">
-                            <label htmlFor="marca" className="block text-sm font-medium leading-6 text-gray-900">
-                                Marca
-                            </label>
-                        </div>
-                        <div className="mt-2">
-                            <input
-                                type="text"
-                                className="input input-bordered w-full"
-                                {...register('marca')}
-                            />
-                        </div>
-                        {
-                            errors.marca && <span className='text-red-600'>{errors.marca.message}</span>
-                        }
-                    </div>
-
-                    <div>
-                        <div className="flex items-center justify-between">
-                            <label htmlFor="talla" className="block text-sm font-medium leading-6 text-gray-900">
-                                Talla
-                            </label>
-                        </div>
-                        <div className="mt-2">
-                            <input
-                                type="text"
-                                className="input input-bordered w-full"
-                                {...register('talla')}
-                            />
-                        </div>
-                        {
-                            errors.talla && <span className='text-red-600'>{errors.talla.message}</span>
-                        }
-                    </div>
-
-                    <div>
-                        <div className="flex items-center justify-between">
-                            <label htmlFor="color" className="block text-sm font-medium leading-6 text-gray-900">
-                                Color
-                            </label>
-                        </div>
-                        <div className="mt-2">
-                            <input
-                                type="text"
-                                className="input input-bordered w-full"
-                                {...register('color')}
-                            />
-                        </div>
-                        {
-                            errors.color && <span className='text-red-600'>{errors.color.message}</span>
-                        }
-                    </div>
-
-                    <div>
-                        <div className="flex items-center justify-between">
-                            <label htmlFor="precio" className="block text-sm font-medium leading-6 text-gray-900">
-                                Precio
-                            </label>
-                        </div>
-                        <div className="mt-2">
-                            <input
-                                type="text"
-                                className="input input-bordered w-full"
-                                {...register('precio')}
-                            />
-                        </div>
-                        {
-                            errors.precio && <span className='text-red-600'>{errors.precio.message}</span>
-                        }
-                    </div>
-
-                    <div>
-                        <div className="flex items-center justify-between">
-                            <label htmlFor="stock" className="block text-sm font-medium leading-6 text-gray-900">
-                                Stock
-                            </label>
-                        </div>
-                        <div className="mt-2">
-                            <input
-                                type="text"
-                                className="input input-bordered w-full"
-                                {...register('stock')}
-                            />
-                        </div>
-                        {
-                            errors.stock && <span className='text-red-600'>{errors.stock.message}</span>
-                        }
-                    </div>
+                    {
+                        formCreateZapato.map((form, index) => {
+                            return (
+                                <div key={index}>
+                                    <div className="flex items-center justify-between">
+                                        <label htmlFor="stock" className="block text-sm font-medium leading-6 text-gray-900">
+                                            {form.label}
+                                        </label>
+                                    </div>
+                                    <div className="mt-2">
+                                        <input
+                                            type="text"
+                                            className="input input-bordered w-full"
+                                            {...register(form.name)}
+                                        />
+                                    </div>
+                                    {
+                                        renderError(form.name, errors)
+                                    }
+                                </div>
+                            )
+                        })
+                    }
 
                     <div>
                         <div className="flex items-center justify-between">
@@ -227,7 +151,7 @@ export const Agregar = () => {
                                 return (
                                     <div key={index} className="card w-28 h-24 overflow-hidden relative">
                                         <div
-                                            onClick={()=>handleDeleteIMage(index)}
+                                            onClick={() => handleDeleteIMage(index)}
                                             className="absolute right-2 top-2 rounded-full bg-red-600 hover:bg-red-700 p-1">
                                             <MdDelete size={25} className="text-white" />
                                         </div>
@@ -240,7 +164,6 @@ export const Agregar = () => {
                             })
                         }
                     </div>
-
 
                     <div>
                         <button
