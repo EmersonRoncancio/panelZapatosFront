@@ -9,6 +9,7 @@ import { AlertError, AlertSucces } from "../../alerts/alerts"
 import { CreateZapato } from "./helpers/helpers"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CreateZapatos, CreateZapatoType } from "../../zod/routesAuth"
+import { MdDelete } from "react-icons/md";
 
 export const Agregar = () => {
 
@@ -63,11 +64,21 @@ export const Agregar = () => {
 
             SetFIleIMage((preveImages) => [...preveImages, ...arrFiles])
 
+            console.log(arrFiles)
             const urlsImgs = arrFiles.map(img => URL.createObjectURL(img))
             setFiles((prevUrls) => [...prevUrls, ...urlsImgs])
         }
     }
 
+    const handleDeleteIMage = (indice:number) =>{
+        const deleteImage = fileIMage
+        deleteImage.splice(indice,1)
+        SetFIleIMage(deleteImage)
+
+        const urlsImgs = deleteImage.map(img => URL.createObjectURL(img))
+        setFiles(urlsImgs)
+    }
+    
     return (
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -214,8 +225,15 @@ export const Agregar = () => {
                         {
                             files?.map((image, index) => {
                                 return (
-                                    <div key={index} className="card w-28 h-24 overflow-hidden">
-                                        <img className="w-full h-full object-cover" src={image} alt="" />
+                                    <div key={index} className="card w-28 h-24 overflow-hidden relative">
+                                        <div
+                                            onClick={()=>handleDeleteIMage(index)}
+                                            className="absolute right-2 top-2 rounded-full bg-red-600 hover:bg-red-700 p-1">
+                                            <MdDelete size={25} className="text-white" />
+                                        </div>
+                                        <img
+
+                                            className="w-full h-full object-cover" src={image} alt="" />
                                     </div>
 
                                 )
