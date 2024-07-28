@@ -64,7 +64,6 @@ export const Agregar = () => {
 
             SetFIleIMage((preveImages) => [...preveImages, ...arrFiles])
 
-            console.log(arrFiles)
             const urlsImgs = arrFiles.map(img => URL.createObjectURL(img))
             setFiles((prevUrls) => [...prevUrls, ...urlsImgs])
         }
