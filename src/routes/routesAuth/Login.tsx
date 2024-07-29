@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
+import { FieldErrors, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { LoginAdministrador, LoginAdministradortype } from '../../zod/routesAuth'
 import { useMutation } from '@tanstack/react-query'
 import { axiosPost } from '../../helpers/peticiones/post'
 import { envs } from '../../configs/envs'
-import { FormLoginAdmin } from './helpers/helpers'
+import { formLoginAdmin, FormLoginAdmin } from './helpers/helpers'
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react'
@@ -64,6 +64,14 @@ export const Login = () => {
         }
     }, [cookie, aunthenticated, navigate])
 
+    const renderError = (fieldName: keyof LoginAdministradortype, errors: FieldErrors<LoginAdministradortype>) => {
+        const error = errors[fieldName];
+        if (error && typeof error.message === 'string') {
+            return <span className='text-red-600'>{error.message}</span>;
+        }
+        return null;
+    };
+
 
     return (
         <>
@@ -83,45 +91,38 @@ export const Login = () => {
                     <form
                         onSubmit={onSubmit}
                         className="space-y-6">
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium leading-6">
-                                Usuario
-                            </label>
-                            <div className="mt-2">
-                                <input
-                                    type='text'
-                                    {...register('usuario')}
-                                    className="block input input-bordered w-full"
-                                />
-                            </div>
-                            {
-                                errors.usuario && <span className='text-red-600'>{errors.usuario.message}</span>
-                            }
-                        </div>
-
-                        <div>
-                            <div className="flex items-center justify-between">
-                                <label htmlFor="password" className="block text-sm font-medium leading-6">
-                                    Contraseña
-                                </label>
-                                <div className="text-sm">
-                                    <Link to='/forgotPassword' className="font-semibold text-indigo-600 hover:text-indigo-500">
-                                        Olvidaste tu contraseña?
-                                    </Link>
-                                </div>
-                            </div>
-                            <div className="mt-2">
-                                <input
-                                    {...register('contraseña')}
-                                    type='password'
-                                    className="input input-bordered w-full"
-                                />
-                                {
-                                    errors.contraseña && <span className='text-red-600'>{errors.contraseña.message}</span>
-                                }
-                            </div>
-                        </div>
-
+                        {
+                            formLoginAdmin.map((form, index) => {
+                                return (
+                                    <div key={index}>
+                                        <div className="flex items-center justify-between">
+                                            <label htmlFor="stock" className="block text-sm font-medium leading-6 text-gray-900">
+                                                {form.label}
+                                            </label>
+                                            {
+                                                form.name === 'contraseña' ?
+                                                    <div className="text-sm">
+                                                        <Link to='/forgotPassword' className="font-semibold text-indigo-600 hover:text-indigo-500">
+                                                            Olvidaste tu contraseña?
+                                                        </Link>
+                                                    </div> :
+                                                    null
+                                            }
+                                        </div>
+                                        <div className="mt-2">
+                                            <input
+                                                type="text"
+                                                className="input input-bordered w-full"
+                                                {...register(form.name)}
+                                            />
+                                        </div>
+                                        {
+                                            renderError(form.name, errors)
+                                        }
+                                    </div>
+                                )
+                            })
+                        }
                         <div>
                             <button
                                 type="submit"

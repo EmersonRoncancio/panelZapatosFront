@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { FieldErrors, useForm } from 'react-hook-form'
 import { ForgotPasswordAdmin, ForgotPasswordType } from '../../zod/routesAuth'
 import { useMutation } from '@tanstack/react-query'
 import { axiosPath } from '../../helpers/peticiones/path'
 import { envs } from '../../configs/envs'
-import { FormForgotPassword } from './helpers/helpers'
+import { formForgotPassword, FormForgotPassword } from './helpers/helpers'
 import { ToastContainer } from 'react-toastify'
 import { AlertError, AlertSucces } from '../../alerts/alerts'
 
@@ -37,6 +37,14 @@ export const ForgotPassword = () => {
     })
   })
 
+  const renderError = (fieldName: keyof ForgotPasswordType, errors: FieldErrors<ForgotPasswordType>) => {
+    const error = errors[fieldName];
+    if (error && typeof error.message === 'string') {
+      return <span className='text-red-600'>{error.message}</span>;
+    }
+    return null;
+  };
+
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -54,60 +62,29 @@ export const ForgotPassword = () => {
         <form
           onSubmit={onSubmit}
           className="space-y-6">
-          <div>
-            <div className="flex items-center justify-between">
-              <label htmlFor="usuario" className="block text-sm font-medium leading-6 text-gray-900">
-                Usuario
-              </label>
-            </div>
-            <div className="mt-2">
-              <input
-                type="text"
-                {...register('usuario')}
-                className="input input-bordered w-full"
-              />
-            </div>
-            {
-              errors.usuario && <span className='text-red-600'>{errors.usuario.message}</span>
-            }
-          </div>
-
-          <div>
-            <div className="flex items-center justify-between">
-              <label htmlFor="nuevaContraseña" className="block text-sm font-medium leading-6 text-gray-900">
-                Nueva Contraseña
-              </label>
-            </div>
-            <div className="mt-2">
-              <input
-                type="password"
-                {...register('nuevaContraseña')}
-                className="input input-bordered w-full"
-              />
-            </div>
-            {
-              errors.nuevaContraseña && <span className='text-red-600'>{errors.nuevaContraseña.message}</span>
-            }
-          </div>
-
-          <div>
-            <div className="flex items-center justify-between">
-              <label htmlFor="claveAdministrativa" className="block text-sm font-medium leading-6 text-gray-900">
-                Clave Administrativa
-              </label>
-            </div>
-            <div className="mt-2">
-              <input
-                type="password"
-                {...register('claveAdministrativa')}
-                className="input input-bordered w-full"
-              />
-            </div>
-            {
-              errors.claveAdministrativa && <span className='text-red-600'>{errors.claveAdministrativa.message}</span>
-            }
-          </div>
-
+          {
+            formForgotPassword.map((form, index) => {
+              return (
+                <div key={index}>
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="stock" className="block text-sm font-medium leading-6 text-gray-900">
+                      {form.label}
+                    </label>
+                  </div>
+                  <div className="mt-2">
+                    <input
+                      type="text"
+                      className="input input-bordered w-full"
+                      {...register(form.name)}
+                    />
+                  </div>
+                  {
+                    renderError(form.name, errors)
+                  }
+                </div>
+              )
+            })
+          }
           <div>
             <button
               type="submit"
