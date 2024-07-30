@@ -134,13 +134,17 @@ export const Agregar = () => {
                             </label>
                         </div>
                         <div className="mt-2">
-                            <input
-                                type="file"
-                                multiple
-                                accept='image/*'
-                                className="file-input file-input-bordered file-input-primary w-full"
-                                {...register('images')}
-                                onChange={handleChange} />
+                            <label className="btn btn-neutral w-full">
+                                Agregar Imagenes
+                                <input
+                                    hidden
+                                    type="file"
+                                    multiple
+                                    accept='image/*'
+                                    {...register('images')}
+                                    onChange={handleChange} />
+                            </label>
+
                         </div>
                     </div>
 
@@ -172,7 +176,7 @@ export const Agregar = () => {
                             {
                                 isPending ?
                                     <span className="loading loading-dots loading-md"></span>
-                                    : <span>Guardar</span>
+                                    : <span>Crear</span>
                             }
                         </button>
                     </div>
