@@ -42,29 +42,35 @@ type typeRegisterAdmin = 'nombre' | 'apellido' | 'usuario' | 'contraseña' | 'cl
 
 interface typeFormRegisterAmdin {
     label: string,
-    name: typeRegisterAdmin
+    name: typeRegisterAdmin,
+    type: string
 }
 
 export const formRegisterAdmin: typeFormRegisterAmdin[] = [
     {
         label: 'Nombre',
-        name: 'nombre'
+        name: 'nombre',
+        type: 'text'
     },
     {
         label: 'Apellido',
-        name: 'apellido'
+        name: 'apellido',
+        type: 'text'
     },
     {
         label: 'Usuario',
-        name: 'usuario'
+        name: 'usuario',
+        type: 'text'
     },
     {
         label: 'Contraseña',
-        name: 'contraseña'
+        name: 'contraseña',
+        type: 'password'
     },
     {
         label: 'Clave Administrativa',
-        name: 'claveAdministrativa' 
+        name: 'claveAdministrativa',
+        type: 'password'
     }
 ]
 
@@ -72,17 +78,20 @@ type typeLoginAdmin = 'usuario' | 'contraseña'
 
 interface typeformLoginAdmin {
     label: string,
-    name: typeLoginAdmin
+    name: typeLoginAdmin,
+    type: string
 }
 
 export const formLoginAdmin: typeformLoginAdmin[] = [
     {
         label: 'Usuario',
-        name: 'usuario'
+        name: 'usuario',
+        type: 'text'
     },
     {
-        label: 'Apellido',
-        name: 'contraseña'
+        label: 'Contraseña',
+        name: 'contraseña',
+        type: 'password'
     },
 ]
 
@@ -90,21 +99,25 @@ type TypesForgotPassword = 'usuario' | 'nuevaContraseña' | 'claveAdministrativa
 
 interface typeFormForgotPassword {
     label: string,
-    name: TypesForgotPassword
+    name: TypesForgotPassword,
+    type: string
 }
 
 export const formForgotPassword: typeFormForgotPassword[] = [
     {
         label: 'Usuario',
-        name: 'usuario'
+        name: 'usuario',
+        type: 'text'
     },
     {
         label: 'Nueva Contraseña',
-        name: 'nuevaContraseña'
+        name: 'nuevaContraseña',
+        type: 'password'
     },
     {
         label: 'Clave Administrativa',
-        name: 'claveAdministrativa' 
+        name: 'claveAdministrativa' ,
+        type: 'password'
     }
 ]
 

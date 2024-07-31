@@ -74,7 +74,7 @@ export const Register = () => {
                     </div>
                     <div className="mt-2">
                       <input
-                        type="text"
+                        type={form.type}
                         className="input input-bordered w-full"
                         {...register(form.name)}
                       />
