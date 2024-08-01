@@ -1,25 +1,28 @@
 import { useQuery } from "@tanstack/react-query"
 import { axiosGet } from "../../helpers/peticiones/get"
 import { envs } from "../../configs/envs"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useZapatos } from "../../context/zapatos"
-import { ToastContainer } from "react-toastify"
+import { SkeletonZapatos } from "./helpers/helpers"
 
 export const Inicio = () => {
 
   const { getzapatos, setZapatos } = useZapatos()
+  const [pagination, setPagination] = useState<number>(1)
+
   const {
     data,
     isLoading,
   } = useQuery({
-    queryKey: ['zapatos'],
-    queryFn: async () => await axiosGet({ url: `${envs.API}/zapatos/` }),
-
+    queryKey: ['zapatos', pagination],
+    queryFn: async () => await axiosGet({ url: `${envs.API}/zapatos/?page=${pagination}` }),
   })
 
   useEffect(() => {
     if (!isLoading) setZapatos(data.Zapatos)
   }, [data, getzapatos, setZapatos, isLoading])
+
+  console.log(data?.nextPage)
 
   return (
     <div>
@@ -56,12 +59,20 @@ export const Inicio = () => {
           </div>
         </div>
       </nav>
-      <main className="w-full flex justify-center items-center my-2">
+      <main className="w-full flex flex-col justify-center items-center my-2 ">
         <div className="useGrid">
           {
             isLoading ?
-              <ToastContainer
-                position="top-center" /> :
+              SkeletonZapatos.map(() => {
+                return (
+                  <div className="flex w-52 flex-col gap-4">
+                    <div className="skeleton h-32 w-full"></div>
+                    <div className="skeleton h-4 w-28"></div>
+                    <div className="skeleton h-4 w-full"></div>
+                    <div className="skeleton h-4 w-full"></div>
+                  </div>
+                )
+              }) :
               getzapatos.map((zapato) => {
                 return (
                   <div className="card bg-base-100 w-64 shadow-xl">
@@ -85,6 +96,17 @@ export const Inicio = () => {
                 )
               })
           }
+        </div>
+        <div className="join my-7">
+          <button className="join-item btn"
+            onClick={() => {
+              setPagination(prevOld => Math.max(prevOld - 1, 1))
+            }} disabled={pagination === 1}>«</button>
+          <div className="join-item btn">Page {pagination}</div>
+          <button className="join-item btn"
+            onClick={() => {
+              setPagination(prevOld => prevOld + 1)
+            }} disabled={!data?.nextPage} >»</button>
         </div>
       </main>
     </div>
