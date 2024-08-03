@@ -1,28 +1,23 @@
-import { useQuery } from "@tanstack/react-query"
 import { axiosGet } from "../../helpers/peticiones/get"
 import { envs } from "../../configs/envs"
 import { useEffect, useState } from "react"
 import { useZapatos } from "../../context/zapatos"
 import { SkeletonZapatos } from "./helpers/helpers"
+import { GetPagination } from "../../customsHooks/GetPagination"
 
 export const Inicio = () => {
 
   const { getzapatos, setZapatos } = useZapatos()
   const [pagination, setPagination] = useState<number>(1)
 
-  const {
-    data,
-    isLoading,
-  } = useQuery({
-    queryKey: ['zapatos', pagination],
-    queryFn: async () => await axiosGet({ url: `${envs.API}/zapatos/?page=${pagination}` }),
+  const { data, isLoading } = GetPagination({
+    querykey: ['zapatos', pagination],
+    queryfn: async () => await axiosGet({ url: `${envs.API}/zapatos/?page=${pagination}` })
   })
 
   useEffect(() => {
     if (!isLoading) setZapatos(data.Zapatos)
   }, [data, getzapatos, setZapatos, isLoading])
-
-  console.log(data?.nextPage)
 
   return (
     <div>

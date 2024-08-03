@@ -1,6 +1,7 @@
 import { Link, Route, Routes } from "react-router-dom"
 import { Agregar } from "./Agregar"
 import { Inicio } from "./Inicio"
+import { UpdateDelete } from "./UpdateDelete"
 
 export const Home = () => {
   return (
@@ -11,6 +12,7 @@ export const Home = () => {
           <ul className="flex flex-col justify-start items-center gap-7">
             <li><Link to='/home/' className="btn btn-wide btn-primary">Inicio</Link></li>
             <li><Link to='/home/agregar' className="btn btn-wide btn-primary">Agregar</Link></li>
+            <li><Link to='/home/updateDelete' className="btn btn-wide btn-primary">Actualizar y Eliminar</Link></li>
           </ul>
         </div>
       </aside>
@@ -18,6 +20,7 @@ export const Home = () => {
         <Routes>
           <Route path="/" element={<Inicio/>} index/>
           <Route path="/agregar" element={<Agregar/>}/>
+          <Route  path="/updateDelete" element={<UpdateDelete/>}/>
         </Routes>
       </main>
     </div>

@@ -9,6 +9,7 @@ type Zapatos = {
 export const useZapatos = create<Zapatos>((set) => ({
     getzapatos: [],
     setZapatos: (getzapatos) => {
+        console.log(getzapatos)
         set({ getzapatos })
     }
 }))

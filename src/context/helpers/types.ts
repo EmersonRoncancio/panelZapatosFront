@@ -1,3 +1,10 @@
+export interface Welcome {
+    Totsal:   number;
+    Page:    number;
+    Limit:   number;
+    Zapatos: Zapato[];
+}
+
 export interface Zapato {
     id:     string;
     nombre: string;
