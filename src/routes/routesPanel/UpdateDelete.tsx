@@ -4,13 +4,10 @@ import { SkeletonZapatos } from "./helpers/helpers"
 import { axiosGet } from "../../helpers/peticiones/get"
 import { envs } from "../../configs/envs"
 import { GetPagination } from "../../customsHooks/GetPagination"
-import { axiosDeleteBearer } from "../../helpers/BearerToken/delete"
-import Cookies from 'js-cookie';
-import { get } from "http"
+import { Card } from "./components/Card"
 
 export const UpdateDelete = () => {
 
-    const [deleLoading, setDeleLoading] = useState(false)
     const { getzapatos, setZapatos } = useZapatos()
     const [pagination, setPagination] = useState<number>(1)
 
@@ -21,28 +18,7 @@ export const UpdateDelete = () => {
 
     useEffect(() => {
         if (!isLoading) setZapatos(data?.Zapatos)
-    }, [data, getzapatos, setZapatos, isLoading])
-
-    const DeleteZapato = async (id: string) => {
-        try {
-            setDeleLoading(true)
-            const token = Cookies.get('login') || ''
-            const { zapatos, message} = await axiosDeleteBearer({
-                url: `${envs.API}/zapatos/delete/${id}`,
-                token: token
-            })
-            console.log(zapatos)
-            setZapatos(zapatos)
-            console.log(getzapatos)
-        } catch (error) {
-            throw Error(`${error}`)
-        } finally {
-            setDeleLoading(false)
-        }
-
-        console.log(getzapatos)
-
-    }
+    }, [data, setZapatos, isLoading])
 
     return (
         <div>
@@ -83,9 +59,9 @@ export const UpdateDelete = () => {
                 <div className="useGrid">
                     {
                         isLoading ?
-                            SkeletonZapatos.map(() => {
+                            SkeletonZapatos.map((number) => {
                                 return (
-                                    <div className="flex w-52 flex-col gap-4">
+                                    <div key={number} className="flex w-52 flex-col gap-4">
                                         <div className="skeleton h-32 w-full"></div>
                                         <div className="skeleton h-4 w-28"></div>
                                         <div className="skeleton h-4 w-full"></div>
@@ -95,29 +71,7 @@ export const UpdateDelete = () => {
                             }) :
                             getzapatos.map((zapato) => {
                                 return (
-                                    <div className="card bg-base-100 w-64 shadow-xl">
-                                        <figure>
-                                            <img
-                                                src={zapato.imagen[0]}
-                                                alt="Shoes" />
-                                        </figure>
-                                        <div className="card-body">
-                                            <h2 className="card-title">
-                                                {zapato.nombre}
-                                            </h2>
-                                            <p>{zapato.marca} {zapato.nombre}</p>
-                                            <div className="card-actions justify-end">
-                                                <button className="btn btn-accent">Editar</button>
-                                                <button
-                                                    onClick={() => DeleteZapato(zapato.id)}
-                                                    className="btn btn-outline btn-error">{
-                                                        deleLoading ?
-                                                            <span className="loading loading-dots loading-md"></span>
-                                                            : <span>Eliminar</span>
-                                                    }</button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <Card key={zapato.id} zapato={zapato} />
                                 )
                             })
                     }

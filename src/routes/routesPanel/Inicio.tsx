@@ -58,9 +58,9 @@ export const Inicio = () => {
         <div className="useGrid">
           {
             isLoading ?
-              SkeletonZapatos.map(() => {
+              SkeletonZapatos.map((num) => {
                 return (
-                  <div className="flex w-52 flex-col gap-4">
+                  <div key={num} className="flex w-52 flex-col gap-4">
                     <div className="skeleton h-32 w-full"></div>
                     <div className="skeleton h-4 w-28"></div>
                     <div className="skeleton h-4 w-full"></div>
@@ -70,7 +70,7 @@ export const Inicio = () => {
               }) :
               getzapatos.map((zapato) => {
                 return (
-                  <div className="card bg-base-100 w-64 shadow-xl">
+                  <div key={zapato.id} className="card bg-base-100 w-64 shadow-xl">
                     <figure>
                       <img
                         src={zapato.imagen[0]}
