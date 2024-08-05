@@ -7,19 +7,21 @@ import { envs } from '../../../configs/envs'
 
 export const Card = ({ zapato }: { zapato: Zapato }) => {
 
-    const { setZapatos } = useZapatos()
+    const { setZapatos, getzapatos } = useZapatos()
     const [deleLoading, setDeleLoading] = useState(false)
 
     const DeleteZapato = async (id: string) => {
         try {
             setDeleLoading(true)
             const token = Cookies.get('login') || ''
-            const { zapatos, message } = await axiosDeleteBearer({
+            const { message } = await axiosDeleteBearer({
                 url: `${envs.API}/zapatos/delete/${id}`,
                 token: token
             })
             console.log(message)
-            setZapatos(zapatos)
+            const arrZapatos = getzapatos
+            const arrNewZapatos = arrZapatos.filter((zapato) => zapato.id !== id)
+            setZapatos(arrNewZapatos)
         } catch (error) {
             throw Error(`${error}`)
         } finally {
@@ -28,7 +30,7 @@ export const Card = ({ zapato }: { zapato: Zapato }) => {
     }
 
     return (
-        <div className="card bg-base-100 w-64 shadow-xl">
+        <div className="card bg-base-100 w-64 h-[345px] shadow-xl">
             <figure>
                 <img
                     src={zapato.imagen[0]}
