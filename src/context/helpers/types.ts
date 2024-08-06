@@ -9,9 +9,9 @@ export interface Zapato {
     id:     string;
     nombre: string;
     marca:  string;
-    talla:  number;
+    talla:  string;
     color:  string;
-    precio: number;
-    stock:  number;
+    precio: string;
+    stock:  string;
     imagen: string[];
 }
