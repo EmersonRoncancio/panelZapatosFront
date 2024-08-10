@@ -56,3 +56,17 @@ export const SkeletonZapatos = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 ]
 
+
+export const valorInicialState = {
+    id: '',
+    nombre: '',
+    marca: '',
+    precio: '',
+    color: '',
+    talla: '',
+    stock: '',
+    imagen: [{
+        url: '',
+        public_id: ''
+    }]
+}

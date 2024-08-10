@@ -73,7 +73,7 @@ export const Inicio = () => {
                   <div key={zapato.id} className="card bg-base-100 w-64 shadow-xl">
                     <figure>
                       <img
-                        src={zapato.imagen[0]}
+                        src={zapato.imagen[0].url}
                         alt="Shoes" />
                     </figure>
                     <div className="card-body">

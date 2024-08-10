@@ -1,26 +1,19 @@
 import { useEffect, useState } from "react"
 import { useZapatos } from "../../context/zapatos"
-import { SkeletonZapatos } from "./helpers/helpers"
+import { SkeletonZapatos, valorInicialState } from "./helpers/helpers"
 import { axiosGet } from "../../helpers/peticiones/get"
 import { envs } from "../../configs/envs"
 import { GetPagination } from "../../customsHooks/GetPagination"
 import { Card } from "./components/Card"
 import { FormUpdate } from "./components/FormUpdate"
 import { Zapato } from "../../context/helpers/types"
+import { AlertSucces } from "../../alerts/alerts"
+import { ToastContainer } from "react-toastify"
 
 export const UpdateDelete = () => {
 
-    const [first2, setfirst2] = useState<Zapato>({
-        id: '',
-        nombre: '',
-        marca: '',
-        precio: '',
-        color: '',
-        talla: '',
-        stock: '',
-        imagen: ['']
-    })
-    const [first, setfirst] = useState<string| null>(null)
+    const [first2, setfirst2] = useState<Zapato>(valorInicialState)
+    const [first, setfirst] = useState<string | null>(null)
     const { getzapatos, setZapatos } = useZapatos()
     const [pagination, setPagination] = useState<number>(1)
 
@@ -85,7 +78,7 @@ export const UpdateDelete = () => {
                             }) :
                             getzapatos.map((zapato) => {
                                 return (
-                                    <Card key={zapato.id} zapato={zapato} setValue={setfirst} setFirst2={setfirst2}/>
+                                    <Card key={zapato.id} zapato={zapato} setValue={setfirst} setFirst2={setfirst2} alert={AlertSucces} />
                                 )
                             })
                     }
@@ -102,8 +95,10 @@ export const UpdateDelete = () => {
                         }} disabled={!data?.nextPage} >»</button>
                 </div>
                 {
-                    first !== null && <FormUpdate setValue={setfirst} zapato={first2}/>
+                    first !== null && <FormUpdate setValueZapato={setfirst} zapato={first2} />
                 }
+                <ToastContainer
+                    position="top-center" />
             </main>
         </div>
     )

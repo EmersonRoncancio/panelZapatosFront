@@ -13,5 +13,10 @@ export interface Zapato {
     color:  string;
     precio: string;
     stock:  string;
-    imagen: string[];
+    imagen: Imagen[];
+}
+
+export interface Imagen {
+    url:       string;
+    public_id: string;
 }

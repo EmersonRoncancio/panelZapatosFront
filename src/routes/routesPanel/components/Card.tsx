@@ -9,9 +9,10 @@ type typesProps = {
     setValue: React.Dispatch<React.SetStateAction<string | null>>,
     setFirst2: React.Dispatch<React.SetStateAction<Zapato>>
     zapato: Zapato,
-  };
+    alert: (message: string) => void
+};
 
-export const Card: React.FC<typesProps> = ({ zapato, setValue, setFirst2 }) => {
+export const Card: React.FC<typesProps> = ({ zapato, setValue, setFirst2, alert }) => {
 
     const { setZapatos, getzapatos } = useZapatos()
     const [deleLoading, setDeleLoading] = useState(false)
@@ -32,6 +33,7 @@ export const Card: React.FC<typesProps> = ({ zapato, setValue, setFirst2 }) => {
             throw Error(`${error}`)
         } finally {
             setDeleLoading(false)
+            alert('Eliminacion con exito')
         }
     }
 
@@ -40,7 +42,7 @@ export const Card: React.FC<typesProps> = ({ zapato, setValue, setFirst2 }) => {
             <div className="card bg-base-100 w-64 h-[345px] shadow-xl">
                 <figure>
                     <img
-                        src={zapato.imagen[0]}
+                        src={zapato.imagen[0].url}
                         alt="Shoes" />
                 </figure>
                 <div className="card-body">
@@ -51,7 +53,7 @@ export const Card: React.FC<typesProps> = ({ zapato, setValue, setFirst2 }) => {
                     <div
                         className="card-actions justify-end">
                         <button
-                            onClick={() =>{
+                            onClick={() => {
                                 setValue('dfd')
                                 setFirst2(zapato)
                             }}
