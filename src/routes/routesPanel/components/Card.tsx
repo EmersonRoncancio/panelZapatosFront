@@ -6,13 +6,13 @@ import { axiosDeleteBearer } from '../../../helpers/BearerToken/delete'
 import { envs } from '../../../configs/envs'
 
 type typesProps = {
-    setValue: React.Dispatch<React.SetStateAction<string | null>>,
-    setFirst2: React.Dispatch<React.SetStateAction<Zapato>>
+    setModal: React.Dispatch<React.SetStateAction<string | null>>,
+    setZapato: React.Dispatch<React.SetStateAction<Zapato>>
     zapato: Zapato,
     alert: (message: string) => void
 };
 
-export const Card: React.FC<typesProps> = ({ zapato, setValue, setFirst2, alert }) => {
+export const Card: React.FC<typesProps> = ({ zapato, setZapato, alert, setModal }) => {
 
     const { setZapatos, getzapatos } = useZapatos()
     const [deleLoading, setDeleLoading] = useState(false)
@@ -54,8 +54,8 @@ export const Card: React.FC<typesProps> = ({ zapato, setValue, setFirst2, alert 
                         className="card-actions justify-end">
                         <button
                             onClick={() => {
-                                setValue('dfd')
-                                setFirst2(zapato)
+                                setModal('Open')
+                                setZapato(zapato)
                             }}
                             className="btn btn-accent">Editar</button>
                         <button

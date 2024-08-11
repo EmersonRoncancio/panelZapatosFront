@@ -7,13 +7,13 @@ import { GetPagination } from "../../customsHooks/GetPagination"
 import { Card } from "./components/Card"
 import { FormUpdate } from "./components/FormUpdate"
 import { Zapato } from "../../context/helpers/types"
-import { AlertSucces } from "../../alerts/alerts"
+import { AlertError, AlertSucces } from "../../alerts/alerts"
 import { ToastContainer } from "react-toastify"
 
 export const UpdateDelete = () => {
 
-    const [first2, setfirst2] = useState<Zapato>(valorInicialState)
-    const [first, setfirst] = useState<string | null>(null)
+    const [zapato, setZapato] = useState<Zapato>(valorInicialState)
+    const [modal, setModal] = useState<string | null>(null)
     const { getzapatos, setZapatos } = useZapatos()
     const [pagination, setPagination] = useState<number>(1)
 
@@ -28,7 +28,6 @@ export const UpdateDelete = () => {
 
     return (
         <div className="relative">
-            {/* <FormUpdate oppen={true} /> */}
             <nav className="p-2">
                 <div className="navbar bg-slate-200 rounded-md">
                     <div className="flex-1">
@@ -78,7 +77,7 @@ export const UpdateDelete = () => {
                             }) :
                             getzapatos.map((zapato) => {
                                 return (
-                                    <Card key={zapato.id} zapato={zapato} setValue={setfirst} setFirst2={setfirst2} alert={AlertSucces} />
+                                    <Card key={zapato.id} zapato={zapato} setZapato={setZapato} alert={AlertSucces} setModal={setModal} />
                                 )
                             })
                     }
@@ -95,9 +94,10 @@ export const UpdateDelete = () => {
                         }} disabled={!data?.nextPage} >»</button>
                 </div>
                 {
-                    first !== null && <FormUpdate setValueZapato={setfirst} zapato={first2} />
+                    modal !== null && <FormUpdate setModal={setModal} zapato={zapato} alertError={AlertError} alertSucces={AlertSucces} />
                 }
                 <ToastContainer
+                    className='z-30'
                     position="top-center" />
             </main>
         </div>

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Imagen, Zapato } from "../../../context/helpers/types";
-import { ToastContainer } from "react-toastify";
 import { CreateZapatos, CreateZapatoType } from "../../../zod/routesAuth";
 import { FieldErrors, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,18 +7,21 @@ import { formCreateZapato } from "../helpers/helpers";
 import { IoClose } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { useMutation } from "@tanstack/react-query";
-import { AlertError, AlertSucces } from "../../../alerts/alerts";
 import { envs } from "../../../configs/envs";
 import Cookies from 'js-cookie'
 import { axiosPutBearer } from "../../../helpers/BearerToken/put";
+import { useZapatos } from "../../../context/zapatos";
 
 type typesProps = {
-    setValueZapato: React.Dispatch<React.SetStateAction<string | null>>,
-    zapato: Zapato
+    setModal: React.Dispatch<React.SetStateAction<string | null>>,
+    zapato: Zapato,
+    alertSucces: (message: string) => void,
+    alertError: (message: string) => void
 };
 
-export const FormUpdate: React.FC<typesProps> = ({ setValueZapato, zapato }) => {
+export const FormUpdate: React.FC<typesProps> = ({ setModal, zapato, alertSucces, alertError }) => {
 
+    const { setZapatos, getzapatos } = useZapatos()
     const [files, setFiles] = useState<(Imagen | string)[]>(zapato.imagen)
     const [fileIMage, SetFIleIMage] = useState<File[]>([])
     const [fileDelete, setFileDelete] = useState<string[]>([])
@@ -27,8 +29,17 @@ export const FormUpdate: React.FC<typesProps> = ({ setValueZapato, zapato }) => 
     const { isPending, mutate } = useMutation({
         mutationFn: axiosPutBearer,
         onSuccess: (data) => {
-            if (data.error) return AlertError(data.error)
-            if (data) return AlertSucces('Actualizacion con exito')
+            if (data.error) return alertError(data.error)
+            if (data) {
+                const arrNewZapatos = getzapatos.map((zapato) => {
+                    if (data.zapato.id === zapato.id) {
+                        return zapato = data.zapato
+                    }
+                    return zapato
+                })
+                setZapatos(arrNewZapatos)
+                return alertSucces('Actualizacion con exito')
+            }
         }
     })
 
@@ -209,12 +220,10 @@ export const FormUpdate: React.FC<typesProps> = ({ setValueZapato, zapato }) => 
                             </div>
                         </form>
                     </div>
-                    <ToastContainer
-                        position="top-center" />
                 </div>
                 <div className="absolute top-0 right-0 m-3">
                     <button
-                        onClick={() => setValueZapato(null)}
+                        onClick={() => setModal(null)}
                         className="flex w-full h-9 justify-center items-center btn btn-error rounded-full">
                         <IoClose size={20} />
                     </button>
