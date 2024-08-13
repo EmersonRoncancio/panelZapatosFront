@@ -23,7 +23,9 @@ export const UpdateDelete = () => {
     })
 
     useEffect(() => {
-        if (!isLoading) setZapatos(data?.Zapatos)
+        if (!isLoading) {
+            setZapatos(data?.Zapatos)
+        }
     }, [data, setZapatos, isLoading])
 
     return (
@@ -94,7 +96,7 @@ export const UpdateDelete = () => {
                         }} disabled={!data?.nextPage} >»</button>
                 </div>
                 {
-                    modal !== null && <FormUpdate setModal={setModal} zapato={zapato} alertError={AlertError} alertSucces={AlertSucces} />
+                    modal !== null && <FormUpdate setModal={setModal} zapato={zapato} alertError={AlertError} alertSucces={AlertSucces} pagination={pagination} />
                 }
                 <ToastContainer
                     className='z-30'

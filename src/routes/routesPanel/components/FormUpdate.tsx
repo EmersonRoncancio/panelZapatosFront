@@ -11,15 +11,17 @@ import { envs } from "../../../configs/envs";
 import Cookies from 'js-cookie'
 import { axiosPutBearer } from "../../../helpers/BearerToken/put";
 import { useZapatos } from "../../../context/zapatos";
+import { axiosGet } from "../../../helpers/peticiones/get";
 
 type typesProps = {
     setModal: React.Dispatch<React.SetStateAction<string | null>>,
     zapato: Zapato,
     alertSucces: (message: string) => void,
-    alertError: (message: string) => void
+    alertError: (message: string) => void,
+    pagination: number
 };
 
-export const FormUpdate: React.FC<typesProps> = ({ setModal, zapato, alertSucces, alertError }) => {
+export const FormUpdate: React.FC<typesProps> = ({ setModal, zapato, alertSucces, alertError, pagination }) => {
 
     const { setZapatos, getzapatos } = useZapatos()
     const [files, setFiles] = useState<(Imagen | string)[]>(zapato.imagen)
@@ -28,8 +30,12 @@ export const FormUpdate: React.FC<typesProps> = ({ setModal, zapato, alertSucces
 
     const { isPending, mutate } = useMutation({
         mutationFn: axiosPutBearer,
-        onSuccess: (data) => {
-            if (data.error) return alertError(data.error)
+        onSuccess: async (data) => {
+            if (data.error) {
+                const renderZapato = await axiosGet({ url: `${envs.API}/zapatos/?page=${pagination}` })
+                setZapatos(renderZapato.Zapatos)
+                return alertError(data.error)
+            }
             if (data) {
                 const arrNewZapatos = getzapatos.map((zapato) => {
                     if (data.zapato.id === zapato.id) {
@@ -67,7 +73,7 @@ export const FormUpdate: React.FC<typesProps> = ({ setModal, zapato, alertSucces
         const formData = new FormData();
         //se agrega los datos a la constante de tipo formData, para manejera envio multiple de imagenes
         fileIMage.forEach((file) => {
-            formData.append('image', file as File | string);
+            formData.append('image', file as File);
         });
 
         fileDelete.forEach((deletes) => {
