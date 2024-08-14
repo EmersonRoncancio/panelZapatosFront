@@ -25,7 +25,7 @@ export const FormUpdate: React.FC<typesProps> = ({ setModal, zapato, alertSucces
 
     const { setZapatos, getzapatos } = useZapatos()
     const [files, setFiles] = useState<(Imagen | string)[]>(zapato.imagen)
-    const [fileIMage, SetFIleIMage] = useState<File[]>([])
+    const [fileIMage, SetFileIMage] = useState<File[]>([])
     const [fileDelete, setFileDelete] = useState<string[]>([])
 
     const { isPending, mutate } = useMutation({
@@ -34,7 +34,8 @@ export const FormUpdate: React.FC<typesProps> = ({ setModal, zapato, alertSucces
             if (data.error) {
                 const renderZapato = await axiosGet({ url: `${envs.API}/zapatos/?page=${pagination}` })
                 setZapatos(renderZapato.Zapatos)
-                return alertError(data.error)
+                alertError(data.error)
+                return setModal(null)
             }
             if (data) {
                 const arrNewZapatos = getzapatos.map((zapato) => {
@@ -44,7 +45,8 @@ export const FormUpdate: React.FC<typesProps> = ({ setModal, zapato, alertSucces
                     return zapato
                 })
                 setZapatos(arrNewZapatos)
-                return alertSucces('Actualizacion con exito')
+                alertSucces('Actualizacion con exito')
+                return setModal(null)
             }
         }
     })
@@ -95,7 +97,7 @@ export const FormUpdate: React.FC<typesProps> = ({ setModal, zapato, alertSucces
         if (event.target.files) {
             const arrFiles = Array.from(event.target.files)
 
-            SetFIleIMage((preveImages) => [...preveImages, ...arrFiles])
+            SetFileIMage((preveImages) => [...arrFiles, ...preveImages])
 
             const urlsImgs = arrFiles.map(img => URL.createObjectURL(img))
             setFiles((prevUrls) => [...prevUrls, ...urlsImgs])
@@ -105,6 +107,11 @@ export const FormUpdate: React.FC<typesProps> = ({ setModal, zapato, alertSucces
     const handleDeleteIMage = (PublicId: string, indice: number) => {
         const arrFIlesDelete: string[] = []
         if (PublicId === '') {
+            //borra imagen que sera mandada a la api
+            const arrFileImages = fileIMage
+            arrFileImages.splice(indice - files.length + fileIMage.length, 1)
+            SetFileIMage(arrFileImages)
+            //borra la image visualmente
             const deleteF = files
             deleteF.splice(indice, 1)
             setFiles(() => [...deleteF])
